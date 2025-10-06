@@ -24,9 +24,9 @@ def paint_instructions_scoreboard_window(win: curses.window, game: str, scores: 
     Paint terminal window with instructions for the game and scoreboard
 
     Args:
-                    win (curses.window): Window in which to paint the instructions
-                    game (str): Game to be played
-                    scores (dict): Scores dictionary
+        win (curses.window): Window in which to paint the instructions
+        game (str): Game to be played
+        scores (dict): Scores dictionary
     """
 
     max_y, max_x = win.getmaxyx()
@@ -116,7 +116,7 @@ def paint_menu(stdscr: curses.window):
     Generate teh menu window
 
     Args:
-                    stdscr (curses.window): The terminal window
+        stdscr (curses.window): The terminal window
 
     Returns:
       str: the corresponding menu item
@@ -131,11 +131,11 @@ def paint_game_over(stdscr: curses.window, score: int):
 Print the game over screen and prompt for player
 
     Args:
-                                    stdscr (curses.window): _description_
-                                    score (int): _description_
+        stdscr (curses.window): _description_
+        score (int): _description_
 
     Returns:
-    str: The player name inputted
+        str: The player name inputted
     """
     game_over_heading = "GAME OVER"
     lines = [
@@ -162,7 +162,7 @@ def paint_quit_screen(stdscr: curses.window):
     Generate the thank you screen
 
     Args:
-                    stdscr (curses.window): the terminal screen
+        stdscr (curses.window): the terminal screen
     """
     thank_you = ["THANK YOU FOR PLAYING", "Press 'q' to quit"]
     win = ScreenWindow(
@@ -176,10 +176,10 @@ def layout(stdscr: curses.window):
     Generate the layout windows for the game screen based on the terminal orientation
 
     Args:
-                    stdscr (curses.window): the terminal window
+        stdscr (curses.window): the terminal window
 
     Returns:
-                    list[curses.window]: The 2 windows needed for the game based
+        list[curses.window]: The 2 windows needed for the game based
     """
     max_y, max_x = stdscr.getmaxyx()
     horizontal = True
@@ -203,7 +203,7 @@ def main(stdscr: curses.window):
 The main driver of the program, used to initiate the program
 
     Args:
-                    stdscr (curses.window): The terminal window
+        stdscr (curses.window): The terminal window
     """
 
     scores = get_scores(SCOREBOARD_PATH)
