@@ -9,8 +9,14 @@ Current Games:
 """
 
 import curses
+from utilities import get_scores, ScreenWindow, update_scoreboard
+from snake import play_snake
 
 INSTRUCTIONS = {}
+GAMES = [
+    "snake"
+]
+SCOREBOARD_PATH = ""
 
 
 def paint_instructions_scoreboard_window(win: curses.window, game: str, scores: dict):
@@ -18,9 +24,9 @@ def paint_instructions_scoreboard_window(win: curses.window, game: str, scores: 
     Paint terminal window with instructions for the game and scoreboard
 
     Args:
-        win (curses.window): Window in which to paint the instructions
-        game (str): Game to be played
-        scores (dict): Scores dictionary
+                    win (curses.window): Window in which to paint the instructions
+                    game (str): Game to be played
+                    scores (dict): Scores dictionary
     """
 
     max_y, max_x = win.getmaxyx()
@@ -110,7 +116,7 @@ def paint_menu(stdscr: curses.window):
     Generate teh menu window
 
     Args:
-        stdscr (curses.window): The terminal window
+                    stdscr (curses.window): The terminal window
 
     Returns:
       str: the corresponding menu item
@@ -125,6 +131,106 @@ def paint_game_over(stdscr: curses.window, score: int):
 Print the game over screen and prompt for player
 
     Args:
-            stdscr (curses.window): _description_
-            score (int): _description_
+                                    stdscr (curses.window): _description_
+                                    score (int): _description_
+
+    Returns:
+    str: The player name inputted
     """
+    game_over_heading = "GAME OVER"
+    lines = [
+        "PLAYER: ###"
+        f"SCORE: {score}"
+    ]
+    win = ScreenWindow(
+        mode="input", lines=lines, stdscr=stdscr, header=game_over_heading
+    )
+    return win.run()
+
+
+def paint_difficulty_menu(stdscr: curses.window):
+    heading = "Choose Your Difficulty"
+    lines = ["Easy", "Hard", "Impossible", "Quit"]
+    win = ScreenWindow(
+        mode="menu", lines=lines, stdscr=stdscr, header=heading
+    )
+    return win.run()
+
+
+def paint_quit_screen(stdscr: curses.window):
+    """
+    Generate the thank you screen
+
+    Args:
+                    stdscr (curses.window): the terminal screen
+    """
+    thank_you = ["THANK YOU FOR PLAYING", "Press 'q' to quit"]
+    win = ScreenWindow(
+        mode="static", lines=thank_you, stdscr=stdscr
+    )
+    win.run()
+
+
+def layout(stdscr: curses.window):
+    """
+    Generate the layout windows for the game screen based on the terminal orientation
+
+    Args:
+                    stdscr (curses.window): the terminal window
+
+    Returns:
+                    list[curses.window]: The 2 windows needed for the game based
+    """
+    max_y, max_x = stdscr.getmaxyx()
+    horizontal = True
+    spacing = 2
+    if max_y > (max_x // 1.5):
+        horizontal = not horizontal
+    if horizontal:
+        left_win = curses.newwin(max_y, (max_x // 2) - spacing, 0, 0)
+        right_win = curses.newwin(
+            max_y, (max_x // 2) - spacing, 0, (max_x // 2) + spacing, 0)
+        return left_win, right_win
+    else:
+        top_win = curses.newwin((max_y // 2) - spacing, max_x, 0, 0)
+        bottom_win = curses.newwin(
+            (max_y // 2) - spacing, max_x, (max_y // 2) + spacing, 0)
+    return top_win, bottom_win
+
+
+def main(stdscr: curses.window):
+    """
+The main driver of the program, used to initiate the program
+
+    Args:
+                    stdscr (curses.window): The terminal window
+    """
+
+    scores = get_scores(SCOREBOARD_PATH)
+    curses.curs_set(0)
+    curses.start_color()
+    curses.use_default_colors()
+    default_colors = curses.color_pair(0)
+    stdscr.bkgd(" ", default_colors)
+    game = paint_menu(stdscr)
+    if not game or game.lower() == "quit":
+        paint_quit_screen(stdscr)
+    else:
+        stdscr.clear()
+        stdscr.refresh()
+        game = game.lower()
+        if game in []:
+            difficulty = paint_difficulty_menu(stdscr)
+        win1, win2 = layout(stdscr)
+        match game:
+            case "snake":
+                score = play_snake(stdscr, win1, win2)
+            # other cases
+        player = paint_game_over(stdscr)
+        update_scoreboard(player, score, game, scores,
+                          difficulty, SCOREBOARD_PATH)
+        paint_quit_screen(stdscr)
+
+
+if __name__ == "__main__":
+    curses.wrapper(main)
