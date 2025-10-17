@@ -16,7 +16,7 @@ INSTRUCTIONS = {}
 GAMES = [
     "snake"
 ]
-SCOREBOARD_PATH = ""
+SCOREBOARD_PATH = "scoreboard.json"
 
 
 def paint_instructions_scoreboard_window(win: curses.window, game: str, scores: dict):
@@ -189,7 +189,7 @@ def layout(stdscr: curses.window):
     if horizontal:
         left_win = curses.newwin(max_y, (max_x // 2) - spacing, 0, 0)
         right_win = curses.newwin(
-            max_y, (max_x // 2) - spacing, 0, (max_x // 2) + spacing, 0)
+            max_y, (max_x // 2) - spacing, 0, (max_x // 2) + spacing)
         return left_win, right_win
     else:
         top_win = curses.newwin((max_y // 2) - spacing, max_x, 0, 0)
@@ -225,8 +225,9 @@ The main driver of the program, used to initiate the program
         match game:
             case "snake":
                 score = play_snake(stdscr, win1, win2)
+                difficulty = ""
             # other cases
-        player = paint_game_over(stdscr)
+        player = paint_game_over(stdscr, score)
         update_scoreboard(player, score, game, scores,
                           difficulty, SCOREBOARD_PATH)
         paint_quit_screen(stdscr)

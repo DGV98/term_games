@@ -144,7 +144,8 @@ def update_scoreboard(
     """
     player = player.upper()
     game = game.lower()
-    difficulty = difficulty.lower()
+    if difficulty:
+        difficulty = difficulty.lower()
     if game not in scores:
         if not difficulty:
             scores[game] = {player: score}
