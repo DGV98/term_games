@@ -1,5 +1,4 @@
 import curses
-import json
 
 
 class ScreenWindow:
@@ -118,53 +117,3 @@ class ScreenWindow:
                     self.selected_idx = (self.selected_idx + 1) % len(self.lines)
                 elif key in [curses.KEY_ENTER, 10, 13]:
                     return self.lines[self.selected_idx]
-
-
-def get_scores(scoreboard_path):
-    with open(scoreboard_path, "r") as scoreboard:
-        scores = json.load(scoreboard)
-    return scores
-
-
-def update_scoreboard(
-    player: str,
-    score: int,
-    game: str,
-    scores: dict,
-    difficulty: str,
-    scoreboard_path: str,
-):
-    """
-    Update the json holding all the scores
-
-    Args:
-        player (str): The player
-        score (int): The score
-        game (str): The game being updated
-    """
-    player = player.upper()
-    game = game.lower()
-    if difficulty:
-        difficulty = difficulty.lower()
-    if game not in scores:
-        if not difficulty:
-            scores[game] = {player: score}
-        else:
-            scores[game] = {difficulty: {player: score}}
-    else:
-        if not difficulty:
-            if player not in scores[game]:
-                scores[game][player] = score
-            else:
-                scores[game][player] = max(score, scores[game][player])
-        else:
-            if difficulty not in scores[game]:
-                scores[game][difficulty] = {player: score}
-            else:
-                if player not in scores[game]:
-                    scores[game][difficulty][player] = score
-                else:
-                    scores[game][difficulty][player] = max(score, scores[game][player])
-
-    with open(scoreboard_path, "w") as scoreboard:
-        json.dump(scores, scoreboard)

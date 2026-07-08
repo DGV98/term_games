@@ -1,2 +1,13 @@
 *.json
 *pycache*
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/

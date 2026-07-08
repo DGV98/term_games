@@ -9,14 +9,15 @@ Current Games:
 """
 
 import curses
-from utilities import get_scores, ScreenWindow, update_scoreboard
-from snake import play_snake
+
+from term_games.scoreboard import get_scores, update_scoreboard
+from term_games.ui import ScreenWindow
+from term_games.games.snake import play_snake
 
 INSTRUCTIONS = {}
 GAMES = [
     "snake"
 ]
-SCOREBOARD_PATH = "scoreboard.json"
 
 
 def paint_instructions_scoreboard_window(win: curses.window, game: str, scores: dict):
@@ -32,7 +33,7 @@ def paint_instructions_scoreboard_window(win: curses.window, game: str, scores: 
     max_y, max_x = win.getmaxyx()
     game = game.lower()
     lines = [
-        f"DGV'S {game.upeer} GAME",
+        f"DGV'S {game.upper()} GAME",
         f"{INSTRUCTIONS[game.lower()]}",
         "SCOREBOARD"
     ]
@@ -128,7 +129,7 @@ def paint_menu(stdscr: curses.window):
 
 def paint_game_over(stdscr: curses.window, score: int):
     """
-Print the game over screen and prompt for player
+    Print the game over screen and prompt for player
 
     Args:
         stdscr (curses.window): _description_
@@ -139,7 +140,7 @@ Print the game over screen and prompt for player
     """
     game_over_heading = "GAME OVER"
     lines = [
-        "PLAYER: ###"
+        "PLAYER: ###",
         f"SCORE: {score}"
     ]
     win = ScreenWindow(
@@ -198,15 +199,15 @@ def layout(stdscr: curses.window):
     return top_win, bottom_win
 
 
-def main(stdscr: curses.window):
+def _main(stdscr: curses.window):
     """
-The main driver of the program, used to initiate the program
+    The main driver of the program, used to initiate the program
 
     Args:
         stdscr (curses.window): The terminal window
     """
 
-    scores = get_scores(SCOREBOARD_PATH)
+    scores = get_scores()
     curses.curs_set(0)
     curses.start_color()
     curses.use_default_colors()
@@ -228,10 +229,14 @@ The main driver of the program, used to initiate the program
                 difficulty = ""
             # other cases
         player = paint_game_over(stdscr, score)
-        update_scoreboard(player, score, game, scores,
-                          difficulty, SCOREBOARD_PATH)
+        update_scoreboard(player, score, game, scores, difficulty)
         paint_quit_screen(stdscr)
 
 
+def main():
+    """Entry point for the tgames command."""
+    curses.wrapper(_main)
+
+
 if __name__ == "__main__":
-    curses.wrapper(main)
+    main()

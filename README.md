@@ -1,23 +1,56 @@
 # term_games
-This a module to run terminal games from your terminal. Layout is dynamic to orientation. Multiple games to choose from 
 
-## TODOS
+Terminal games you can play from your terminal. Layout is dynamic to orientation. Multiple games to choose from.
+
+## Installation
+
+```bash
+pip install tgames
+```
+
+Or install from source:
+
+```bash
+git clone https://github.com/david/term_games.git
+cd term_games
+pip install -e .
+```
+
+## Usage
+
+After installation, run:
+
+```bash
+tgames
+```
+
+Or run as a Python module:
+
+```bash
+python -m term_games
+```
+
+## Controls
+
+- **Arrow keys** or **j/k**: Navigate menus
+- **Enter**: Select
+- **q**: Quit
+
+## Games
+
+- **Snake**: Classic snake game using arrow keys to move
+
+## Scores
+
+High scores are saved to `~/.local/share/tgames/scoreboard.json`
+
+## Requirements
+
+- Python >= 3.10
+- No external dependencies (uses only Python standard library)
+
+## TODOs
+
 - Use sqlite database
-    - Create the schema 
 - Start other games
-- Clean up the utilities file
-    - Set up the scoreboard as a sqlite database
-    - Write to the scoreboard when a game is over
-    - Read from the scoreboard if it is returning player
-    - Set up windows differently using inheritance
-        - Base Window takes stdscr (the terminal) and should have a run method that returns score
-- Set this up as a module
-    - Create the yaml file
-        - There are no dependencies besides those in base python
-    - Create init file
-    - Publish on pypi
-- Market on hacker news or reddit
 - Put gameplay video in README
-
-
-
